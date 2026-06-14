@@ -18,56 +18,53 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Debug - List directory structure
-        run: |
-          echo "=== Root directory ==="
-          ls -la
-          echo ""
-          echo "=== Finding build.gradle ==="
-          find . -name "build.gradle" -type f | head -5
-          echo ""
-          echo "=== Finding gradlew ==="
-          find . -name "gradlew" -type f | head -5
-
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Detect and build project
+      - name: Build vmod project
         run: |
-          # Find the directory containing build.gradle
-          BUILD_DIR=$(find . -name "build.gradle" -type f | head -1 | xargs dirname)
-          
-          if [ -z "$BUILD_DIR" ] || [ "$BUILD_DIR" = "." ]; then
-            BUILD_DIR="."
+          # Try to find vmod directory
+          if [ -d "src/main/java/com/vmod" ]; then
+            # Project at root level
+            echo "Building Fabric Mod at root..."
+            if [ ! -f gradlew ]; then
+              gradle wrapper --gradle-version 8.5
+            fi
+            chmod +x gradlew
+            ./gradlew build -x test
+          else
+            echo "Building from vmod directory..."
+            cd vmod
+            if [ ! -f gradlew ]; then
+              echo "Creating gradlew in vmod..."
+              gradle wrapper --gradle-version 8.5
+            fi
+            chmod +x gradlew
+            ./gradlew build -x test
           fi
-          
-          echo "Building in: $BUILD_DIR"
-          cd "$BUILD_DIR"
-          
-          # Create gradlew if doesn't exist
-          if [ ! -f gradlew ]; then
-            echo "Creating gradlew..."
-            gradle wrapper --gradle-version 8.5
-          fi
-          
-          chmod +x gradlew
-          echo "Running: ./gradlew build"
-          ./gradlew build -x test --info
 
-      - name: Find and upload JAR
-        run: |
-          echo "=== Looking for JAR files ==="
-          find . -name "*.jar" -path "*/build/libs/*" -type f
-          
+      - name: Find JAR files
+        run: find . -name "*.jar" -path "*/build/libs/*" -type f
+
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts
+          name: vmod-build
           path: |
             build/libs
-            */build/libs
+            vmod/build/libs
           retention-days: 30
         if: always()
+
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            build/libs/*.jar
+            vmod/build/libs/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
