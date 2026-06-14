@@ -223,18 +223,18 @@ public class ClickGui extends Screen {
             if (isInside(mx, my, x, startY, PANEL_W - PADDING * 2, lineH)) at.onFall    = !at.onFall;    startY += lineH;
             if (isInside(mx, my, x, startY, PANEL_W - PADDING * 2, lineH)) at.onElytra  = !at.onElytra;  startY += lineH;
             if (isInside(mx, my, x, startY, PANEL_W - PADDING * 2, lineH)) at.onTNT     = !at.onTNT;     startY += lineH;
-            if (isInside(mx, my, x, startY, PANEL_W - PADDING * 2, lineH)) at.onCreeper = !at.onCreeper;
+            if (isInside(mx, my, x, startY, PANEL_W - PADDING * 2, lineH)) at.onCreeper = !at.onCreeper; startY += lineH;
 
         } else if (selectedModule instanceof HitBox hb) {
             if (isInside(mx, my, x, startY, PANEL_W - PADDING * 2, lineH)) hb.onlyWeapon = !hb.onlyWeapon; startY += lineH;
-            if (isInside(mx, my, x, startY, PANEL_W - PADDING * 2, lineH)) hb.renderBox  = !hb.renderBox;
+            if (isInside(mx, my, x, startY, PANEL_W - PADDING * 2, lineH)) hb.renderBox  = !hb.renderBox; startY += lineH;
 
         } else if (selectedModule instanceof AutoCart ac) {
             if (isInside(mx, my, x, startY, PANEL_W - PADDING * 2, lineH))
                 ac.mode = (ac.mode == AutoCart.Mode.BOW) ? AutoCart.Mode.CROSSBOW : AutoCart.Mode.BOW;
             startY += lineH;
             if (isInside(mx, my, x, startY, PANEL_W - PADDING * 2, lineH)) ac.swapBack   = !ac.swapBack;   startY += lineH;
-            if (isInside(mx, my, x, startY, PANEL_W - PADDING * 2, lineH)) ac.changeLook = !ac.changeLook;
+            if (isInside(mx, my, x, startY, PANEL_W - PADDING * 2, lineH)) ac.changeLook = !ac.changeLook; startY += lineH;
         }
     }
 
