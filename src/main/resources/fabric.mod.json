@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "vmod",
+  "version": "1.0.0",
+  "name": "VMod",
+  "description": "Combat utility mod with AutoCart, AutoTotem and HitBox.",
+  "authors": ["you"],
+  "environment": "client",
+  "entrypoints": {
+    "client": ["com.vmod.VMod"]
+  },
+  "mixins": ["vmod.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "~1.21",
+    "java": ">=21"
+  }
+}
